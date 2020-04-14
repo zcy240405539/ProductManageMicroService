@@ -2,9 +2,7 @@ package com.framework.controller;
 
 import com.framework.business.*;
 import com.framework.jpa.*;
-
-import java.util.List;
-
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -127,47 +125,12 @@ public class ProductRestMicroService {
 	}
 */
 	@GetMapping(value="/checkProduct/{pid}")
-	public List<String> check(@PathVariable String pid) {
-		ProductsEntity beanResult = productBean.checkProduct(pid);
-		if(beanResult != null) {
-			//System.out.println("success");
-			//String result=beanResult.getPname()+" $"+beanResult.getPrice()+" "+beanResult.getCategory()+""+beanResult.getCategory();
-			//String[] result= {beanResult.getPid(),beanResult.getPname(),beanResult.getPrice(),beanResult.getCategory(),beanResult.getPicture(),beanResult.getDetail()};
-			List<String> result = null;
-			result.add(beanResult.getPid());
-			if(beanResult.getPname().isEmpty()||beanResult.getPname()==null) {
-				result.add("");
-			}else {
-				result.add(beanResult.getPid());
-			}
-			
-			if(beanResult.getPrice().isEmpty()||beanResult.getPrice()==null) {
-				result.add("");
-			}else {
-				result.add(beanResult.getPrice());
-			}
-			
-			if(beanResult.getCategory().isEmpty()||beanResult.getCategory()==null) {
-				result.add("");
-			}else {
-				result.add(beanResult.getCategory());
-			}
-			
-			if(beanResult.getPicture().isEmpty()||beanResult.getPicture()==null) {
-				result.add("");
-			}else {
-				result.add(beanResult.getPicture());
-			}
-			
-			if(beanResult.getDetail().isEmpty()||beanResult.getDetail()==null) {
-				result.add("");
-			}else {
-				result.add(beanResult.getDetail());
-			}
-			
-			return result;
+	public ProductsEntityDTO check(@PathVariable String pid) {
+		ProductsEntity product = productBean.checkProduct(pid);		
+		if(product!=null) {
+			ProductsEntityDTO beanResult= new ProductsEntityDTO(product.getPid(),product.getPname(),product.getPrice(),product.getCategory(),product.getPicture(),product.getDetail());
+			return beanResult;
 		}else {
-			//return "error";
 			return null;
 		}
 
@@ -191,10 +154,24 @@ public class ProductRestMicroService {
 			return ProductList;
 		}else {
 			return null;
-		}
-			
-		
+		}		
 	}
+	
+	
+	@GetMapping(value="/category/{category}")
+	public List<ProductsEntityDTO> category(@PathVariable String category){
+		List<ProductsEntity> productsEntity = productBean.checkCategory(category);
+		List<ProductsEntityDTO> productsEntityDTO = new ArrayList<ProductsEntityDTO>();
+		if(!productsEntity.isEmpty()) {
+			for(ProductsEntity product:productsEntity) {
+				productsEntityDTO.add(new ProductsEntityDTO(product.getPid(),product.getPname(),product.getPrice(),product.getCategory(),product.getPicture(),product.getDetail()));
+			}
+			return productsEntityDTO;
+		}else {
+			return null;
+		}		
+	}
+
 	
 
 }

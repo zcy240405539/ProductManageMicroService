@@ -1,11 +1,8 @@
 package com.framework.jpa;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.*;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import com.framework.jpa.ProductsEntity;
 
 @Repository
@@ -14,6 +11,5 @@ public interface ProductRepository extends JpaRepository<ProductsEntity, String>
 	 public List<ProductsEntity> findByPid(String pid);
 	 @Query("SELECT p FROM ProductsEntity p WHERE p.category=?1")
 	 public List<ProductsEntity> findByCategory(String category);
-
 	 
 }
